@@ -1,7 +1,12 @@
 # Installation
 >
 >
-> The documentation and examples are written assuming you are running F.A.M. on a Mac and that the F.A.M. repository was cloned from GitHub. If you are using a different operating system you will need to adjust commands, drive letters, and paths accordingly.
+> The documentation and examples are written assuming you are running F.A.M. on a Mac and that the repository was cloned from GitHub. If you are using a different operating system you will need to adjust commands, drive letters, and paths accordingly. Additionally, it is assumed you have a basic knowledge of bash scripting to properly navigate in the terminal.
+>
+> Create a project directory and navigate inside run the following command to clone the F.A.M. repository:
+```
+git clone "https://github.com/Will-Carrara/Fallowed-Area-Mapping.git"
+```
 >
 > ## Python
 > F.A.M. requires Python 3.* 64-bit and at least 4GB of memory. A simple guide on installing python can be found [here](https://docs.python-guide.org/starting/installation/).
