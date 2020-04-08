@@ -10,7 +10,7 @@
 >
 > ## Directory Setup
 > You will need to initially set up a directory structure in this format. Note this will vary for the years you
->    .
+>  .
 >    ├── ...
 >    ├── test                    # Test files (alternatively `spec` or `tests`)
 >    │   ├── benchmarks          # Load and stress tests

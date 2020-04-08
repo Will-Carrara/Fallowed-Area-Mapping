@@ -1,9 +1,9 @@
 # Installation
 >
 >
-> The documentation and examples are written assuming you are running F.A.M. on a Mac and that the repository was cloned from GitHub. If you are using a different operating system you will need to adjust commands, drive letters, and paths accordingly. Additionally, it is assumed you have a basic knowledge of bash scripting to properly navigate in the terminal.
+> The documentation and examples are written assuming you are running F.A.M. on a Mac and that the repository was cloned from GitHub. If you are using a different operating system you will need to adjust commands, drive letters, and paths accordingly. Additionally, it is assumed you have a basic knowledge of bash scripting to properly navigate within the terminal.
 >
-> Create a project directory and navigate inside run the following command to clone the F.A.M. repository:
+> Create a project directory and navigate inside to run the following command which will create a local clone of the F.A.M. repository:
 ```
 git clone "https://github.com/Will-Carrara/Fallowed-Area-Mapping.git"
 ```
