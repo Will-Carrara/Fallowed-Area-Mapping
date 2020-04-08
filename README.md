@@ -1,6 +1,5 @@
 # Fallowed Area Mapping
 >
-> ## Python Implementation
 >
 > ### Abstract
 > Working in collaboration with the California Department of Water Resources, scientists at NASA Ames Research Center (ARC), the U.S. Geological Survey (USGS), the U.S. Department of Agriculture (USDA), and California State University Monterey Bay (CSUMB) have demonstrated the feasibility of using satellite imagery to track the extent of fallowed land in the Central Valley of California on a monthly basis.
@@ -12,7 +11,7 @@
 > Details on installing F.A.M and necessary modules can be found in the [installation instructions](docs/install.md).
 >
 > ## Workflow
-> A detailed walk-through on the setup and operation of F.A.M. has been assembled in the following series of documentation contained in the following links:
+> A detailed walk-through on the setup and operation of F.A.M. has been assembled in the following series of documentation contained in the links below:
 > 1. [Data Acquisition](docs/data_acquisition.md)
 > 2. [Running F.A.M.](docs/tutorial.md)
 >
