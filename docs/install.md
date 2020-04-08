@@ -8,7 +8,7 @@
 >
 > ## Dependencies
 > Please run the following command to install the external modules:
-```python
+```
 pip install -r requirements.txt
 ```
 > For further details, please check the [requirements](../requirements.txt) file on the version requirements. The module version numbers listed in the file were tested and are known to work. Other combinations of versions may work but have not been tested.
