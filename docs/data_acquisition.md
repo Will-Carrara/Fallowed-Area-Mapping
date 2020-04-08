@@ -1,4 +1,5 @@
 # Data Acquisition
 >
-> ### Abstract
-> A decision tree classification algorithm was created to assist with identifying fallow agricultural lands based on Normalized Difference Vegetation Index (NDVI) thresholds. Satellite data from 30m resolution Landsat 5, 7, and 8.
+>
+> ### Introduction
+> This [document](https://docs.google.com/document/d/1TTolXOjy3UQUG_UKBN5ror2HNB1JjmtVScBrJW-CjHo/edit#heading=h.jpm77k4o3md1) will guide you through the process of extracting the average NDVI of a given set of polygons of farm field boundaries, formatting the extracted files for analysis, and creating pivot tables. You will be using the Google Earth Engine Python API to do the extraction and Python to do the rest.
