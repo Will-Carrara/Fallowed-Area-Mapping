@@ -1,7 +1,7 @@
 # Fallowed Area Mapping
 >
 >
-> ### Abstract
+> ## Abstract
 > Working in collaboration with the California Department of Water Resources, scientists at NASA Ames Research Center (ARC), the U.S. Geological Survey (USGS), the U.S. Department of Agriculture (USDA), and California State University Monterey Bay (CSUMB) have demonstrated the feasibility of using satellite imagery to track the extent of fallowed land in the Central Valley of California on a monthly basis.
 >
 > Satellite remote sensing offers an efficient and consistent way to provide quantitative assessments of drought impacts on agricultural production and increases in fallow acreage associated with reductions in surface water supplies. To provide quantitative measures of uncultivated agricultural acreage throughout the year, we developed a decision tree algorithm and applied it to timeseries data from Landsat satellites.
