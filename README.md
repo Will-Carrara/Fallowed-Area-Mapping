@@ -6,8 +6,8 @@
 >
 > Satellite remote sensing offers an efficient and consistent way to provide quantitative assessments of drought impacts on agricultural production and increases in fallow acreage associated with reductions in surface water supplies. To provide quantitative measures of uncultivated agricultural acreage throughout the year, we developed a decision tree algorithm and applied it to timeseries data from Landsat satellites.
 >
-> ## Install
-> Details on installing F.A.M and necessary modules can be found in the [installation instructions](docs/install.md).
+> ## Installation
+> Details on installing F.A.M and necessary modules can be found in these [instructions](docs/install.md).
 >
 > ## Workflow
 > A detailed walk-through on the setup and operation of F.A.M. has been assembled in the following series of documentation contained in the links below:
