@@ -10,10 +10,12 @@
 >
 > ## Directory Setup
 > You will need to initially set up a directory structure in this format. Note this will vary for the years you
+```bash
     .
     ├── docs
-    ├── states                  # Test files (alternatively `spec` or `tests`)
-    │   ├── California          # Load and stress tests
-    │   ├── Nevada              # End-to-end, integration tests (alternatively `e2e`)
-    │   └── Washington          # Unit tests
+    ├── states                  # comment
+    │   ├── California          # comment
+    │   ├── Nevada              # comment
+    │   └── Washington          # comment
     └── ...
+```
