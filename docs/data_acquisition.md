@@ -9,13 +9,34 @@
 > <img src="imgs/format.png" width="600"/>
 >
 > ## Directory Setup
-> You will need to initially set up a directory structure in this format. Note this will vary for the years you
+> You will need to initially set up a directory structure in this format. Note this will vary for the years you intend to analyze.
 ```bash
     .
-    ├── docs
-    ├── states                  # comment
-    │   ├── California          # comment
-    │   ├── Nevada              # comment
-    │   └── Washington          # comment
-    └── ...
+    ├── docs					# documentation
+    └── states
+        ├── California
+     	│	├── input
+        │   │   ├── 2008
+     	│	│	├── ...         # a directory for each year of data
+     	│	│	├── 2020
+     	│	│	└── crop_data   # perennial data to be stored here
+     	│	├── output
+     	│	└── cache 			# will be created automatically after initial run
+    	│
+        ├── Nevada
+     	│	├── input
+        │   │   ├── 2008
+     	│	│	├── ...
+     	│	│	└── 2020
+    	│	├── output
+    	│	└── cache
+    	│
+        └── Washington
+    		├── input
+    	    │   ├── 2008
+  			├── ├── ...
+    		│	├── 2020
+    		│	└── crop_data
+    		├── output
+    		└── cache
 ```
