@@ -143,8 +143,6 @@ except:
     export(yr_2019, "cache/yr_2019")
 
 test = [yr_2008, yr_2009, yr_2010, yr_2013, yr_2015, yr_2016, yr_2017, yr_2018, yr_2019]
-[print(yr.shape) for yr in test]
-quit()
 
 def reduce (df):
     common = df.index.intersection(yr_2008.index)
@@ -170,8 +168,6 @@ yr_2016 = reduce(yr_2016)
 yr_2017 = reduce(yr_2017)
 yr_2018 = reduce(yr_2018)
 yr_2019 = reduce(yr_2019)
-
-
 
 print("Processing completed at",snapshot(start),"minutes.\n")
 
