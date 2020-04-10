@@ -10,5 +10,4 @@ help(name_of_function)
 ```
 >
 > ## Step 1
->
-> Modification will need to be made based on your specific inputs. The current structure of the algorithm varies slightly on a state by state basis, however they are generally the same.
+> Script modification will need to be made based on your specific inputs. The current format of the algorithm varies slightly state by state, however the structure is generally the similar. Let's start with the inputs.
