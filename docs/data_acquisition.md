@@ -40,4 +40,5 @@
             ├── output
             └── cache
 ```
-> In the <i>input</i> directories within each folder labeled according its corresponding year, place the output files of the extractions.
+> In the <i>input</i> directories within each folder labeled according its corresponding year, place the output files of the extractions. You will note that there is a folder named <i>crop_data</i>. This contains a .csv file which lists known perennial sites within the state. This information is provided for both Washington and California, the latter can be found [here](../states/California/sample_crop_data/).
+
