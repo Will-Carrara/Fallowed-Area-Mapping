@@ -2,7 +2,7 @@
 >
 >
 > ## Python Implementation
-> This approach is based on a decision tree classification algorithm which was created to assist with identifying fallow agricultural lands based on Normalized Difference Vegetation Index (NDVI) thresholds.
+> This approach is based on a decision tree classification algorithm which was created to assist with identifying fallow agricultural lands based on Normalized Difference Vegetation Index (NDVI) thresholds. This tutorial will walk to through running F.A.M. for the state of Washington. When running for yourself, you will need to provide your own inputs. For this example, the inputs are already provided.
 >
 > If at any point you experience trouble with one of the functions you can use a help command within the script for additional insight.
 ```python
