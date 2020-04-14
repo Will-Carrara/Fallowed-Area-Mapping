@@ -9,10 +9,16 @@
 help(name_of_function)
 ```
 >
-> ## Step 1
-> Script modification will need to be made based on your specific inputs. The current format of the algorithm varies slightly state by state, however the fundamental structure is very similar.
+> ## Understanding the Algorithm
+> Script modification will need to be made based on your specific inputs. The current format of the algorithm varies slightly state by state, however the fundamental structure is very similar. On a high level of abstraction the F.A.M. algorithm preforms these tasks in order:
+> - Read and pre-process input data.
+> - Calculate NDVI maximums over a 5 year user-defined historical period.
+> - Make initial classification on data partitioned by season.
+> - Reclassify observations in post-processing
+> - Export results.
 >
-> This script is written in a functional programming style, where the main calls take place in the last few lines of code. To help you understand the logic will start at the beginning.
+> This script is written in a functional programming style, where the main calls take place in the last few lines of code. To help you understand the logic will start at the beginning and work our way down.
+>
 ```python
 # field status                        cdl
 crp = 5 # cropped                     -> 2
@@ -22,13 +28,63 @@ pin = 2 # partially irrigated normal  -> 8
 pop = 1 # partially irrigated poor    -> 9
 
 ```
-> Here we are defining the dummy variables which we will use to encode our classes. These numbers are not chosen arbitrarily and their order is of consequence. F.A.M uses a hierarchical merging process in which classes with a higher weight take precedence. The intuition here, is that if the routine classifies a field as cropped, it is possible that it may also be classified as partially irrigated. In such an event, the cropped status will take priority. This method is programmatically equivalent to running the sub-classifications on the residuals of each prior run.
+> Here we are defining the dummy variables which we will use to encode our classes. These numbers are not chosen arbitrarily and their order is of consequence. F.A.M uses a hierarchical merging process in which classes with a higher weight take precedence. The intuition here is that if a subroutine classifies a field as cropped, it is possible that it may also be classified as partially irrigated by another subroutine. In such an event, the cropped status will take priority. This method is programmatically equivalent to running each classification on the residuals of each prior run.
+>
 ```python
 files = np.sort([x for x in glob.glob('input/*/*.csv')])
 ```
-<i>files</i> is sorted list of the paths to the input csvs. **It is critical that you have followed the directory setup instructions in the [Data Acquisition](data_acquisition.md) tutorial.** If this has been done incorrectly, you files will not be ordered properly and the F.A.M. results will be inaccurate. In this example, everything is already setup properly.
+> <i>files</i> is sorted list of the paths to the input csvs. **It is critical that you have followed the directory setup instructions in the [data acquisition tutorial](data_acquisition.md).** If this has been done incorrectly, you files will not be ordered properly and the F.A.M. results will be erroneous. In this example everything is already setup properly so you don't need to worry.
+>
+```python
+try:
+    yr_2008 = pd.read_csv("cache/yr_2008.csv").set_index('id')
+    yr_2009 = pd.read_csv("cache/yr_2009.csv").set_index('id')
+    yr_2010 = pd.read_csv("cache/yr_2010.csv").set_index('id')
+    yr_2013 = pd.read_csv("cache/yr_2013.csv").set_index('id')
+    yr_2015 = pd.read_csv("cache/yr_2015.csv").set_index('id')
+    yr_2016 = pd.read_csv("cache/yr_2016.csv").set_index('id')
+    yr_2017 = pd.read_csv("cache/yr_2017.csv").set_index('id')
+    yr_2018 = pd.read_csv("cache/yr_2018.csv").set_index('id')
+    yr_2019 = pd.read_csv("cache/yr_2019.csv").set_index('id')
 
+except:
+    print("Exception: year not found.")
+    yr_2008 = process(files[0:24], 2008)
+    yr_2009 = process(files[24:48], 2009)
+    yr_2010 = process(files[48:72], 2010)
+    yr_2013 = process(files[72:96], 2013)
+    yr_2015 = process(files[96:120], 2015)
+    yr_2016 = process(files[120:144], 2016)
+    yr_2017 = process(files[144:168], 2017)
+    yr_2018 = process(files[168:192], 2018)
+    yr_2019 = process(files[192:216], 2019)
 
+    export(yr_2008, "cache/yr_2008")
+    export(yr_2009, "cache/yr_2009")
+    export(yr_2010, "cache/yr_2010")
+    export(yr_2013, "cache/yr_2013")
+    export(yr_2015, "cache/yr_2015")
+    export(yr_2016, "cache/yr_2016")
+    export(yr_2017, "cache/yr_2017")
+    export(yr_2018, "cache/yr_2018")
+    export(yr_2019, "cache/yr_2019")
+```
+> We are going to run into a rather dense <i>try-catch</i> block here. F.A.M. uses historical data as part of the classification procedure (more on this later). When running for the current year you don't need to rerun for the past years. To save time and computing resources, we will cache our previously processed data. **Note: you will need to delete any year from the cache if you update the input data for that year.**
+>
+```python
+# historic years
+years = [yr_2008, yr_2009, yr_2010, yr_2013, yr_2017]
+
+# calculate 5 year maximums for smoothed ts
+max_smooth_spring = np.array([smooth(df.iloc[:,8:19]).max(axis=1) for df in years]).max(0)
+max_smooth_overlap = np.array([smooth(df.iloc[:,12:23]).max(axis=1) for df in years]).max(0)
+max_smooth_summer = np.array([smooth(df.iloc[:,19:38]).max(axis=1) for df in years]).max(0)
+
+max_smooth_5yr = pd.DataFrame({'id': yr_2018.index.values, 'spring_ndvi_smoothed_5yr_max':
+ max_smooth_spring,'overlap_ndvi_smoothed_5yr_max': max_smooth_overlap,
+ 'summer_ndvi_smoothed_5yr_max': max_smooth_summer}).set_index('id')
+```
+> As mentioned above, F.A.M. uses historical data as part of the classification procedure. Here we have defined 2008, 2009, 2010, 2013, and 2017 as our reference years. Internal testing showed five years is sufficient for accurate results, however you may add more if desired.
 
 
 
@@ -55,4 +111,4 @@ print("Post-processing & exports completed at",snapshot(start),"minutes.\n")
 end = time.time()
 print("Total time to run script:", str(round((end-start)/60,3)), "minutes.\n")
 ```
-> The F.A.M. algorithm uses a lot of list comprehension. If you are not familiar with this, you can find more information [here]("https://www.geeksforgeeks.org/comprehensions-in-python/").
+> The F.A.M. algorithm uses a lot of list comprehension. If you are not familiar with this, you can find more information [here](https://www.geeksforgeeks.org/comprehensions-in-python/).
