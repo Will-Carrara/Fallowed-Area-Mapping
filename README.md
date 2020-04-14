@@ -1,4 +1,4 @@
-# Fallowed Area Mapping
+# Fallowed Area Mapping (UNDER CONSTRUCTION)
 >
 >
 > ## Abstract
@@ -15,7 +15,7 @@
 > 2. [Running F.A.M.](docs/tutorial.md)
 >
 > ## Limitations
-> Please note that this code is written for the data as it is currently provided, however the data and it’s formatting is controlled by the data providers and by third-party hosts. The curators of F.A.M. will attempt to keep the package functional, however changes in the data and data availability may impact the functionality of F.A.M.
+> Please note that this code is written for the data as it is currently extracted. The curators of F.A.M. will attempt to keep the package functional, however changes in the data and data availability may impact the functionality of this algorithm.
 >
 > ## Results Preview
 > Information pending.

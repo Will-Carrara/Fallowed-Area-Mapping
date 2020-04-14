@@ -263,7 +263,7 @@ def postProcess(yr_df):
     """Performs final classification on results.
 
     Compares the date of the max ndvi value with cropped observations in the overlap
-    period to reclassify observations as cropped. Calls decoding function to encoded
+    period to reclassify observations as cropped. Calls decoding function on encoded
     statuses to proper cdl standards. Calls fallowMapping for initial classifications.
 
     Args:
