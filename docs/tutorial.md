@@ -2,22 +2,22 @@
 >
 >
 > ## Python Implementation
-> This approach is based on a decision tree classification algorithm which was created to assist with identifying fallow agricultural lands based on Normalized Difference Vegetation Index (NDVI) thresholds. This tutorial will walk you through running F.A.M. for the state of Washington. For future runs, you will need to provide your own inputs, however for this example the inputs are already provided. This implementation uses the pandas ecosystem with the application Data Frames as the main storage container.
+> This approach is based on a decision tree classification algorithm which was created to assist with identifying fallow agricultural lands based on Normalized Difference Vegetation Index (NDVI) thresholds. This tutorial will walk you through running F.A.M. for the state of Washington. For future runs, you will need to provide your own inputs, however for this example the inputs are already provided. This implementation uses the pandas ecosystem with the use of Data Frames as the main storage container.
 >
-> If at any point you experience trouble with one of the functions you can use a help command within the script for additional insight.
+> If at any point you experience trouble with one of the functions you can use a `help()` command within the script for additional insight as shown here:
 ```python
 help(name_of_function)
 ```
 >
 > ## Understanding the Algorithm
-> Script modification will need to be made based on your specific inputs. The current format of the algorithm varies slightly state by state, however the fundamental structure is very similar. On a high level of abstraction the F.A.M. algorithm preforms these tasks in order:
+> Script modification will need to be made based on your specific inputs. The current format of the algorithm varies slightly state by state, however the fundamental structure is very similar. On a high level of abstraction the F.A.M. algorithm performs the following tasks sequentially:
 > - Read and pre-process input data
 > - Calculate NDVI maximums over a 5 year user-defined historical period
 > - Make initial classification on data partitioned by season
 > - Reclassify observations in post-processing
 > - Export results
 >
-> This script is written in a functional programming style, where the main calls take place in the last few lines of code. To help you understand the logic will start at the beginning and work our way down.
+> This script is written in a functional programming style, where the main calls take place in the last few lines of code. To better help you understand the logic behind F.A.M., we will start at the beginning and work our way down.
 >
 ```python
 # field status                        cdl
@@ -32,7 +32,7 @@ pop = 1 # partially irrigated poor    -> 9
 ```python
 files = np.sort([x for x in glob.glob('input/*/*.csv')])
 ```
-> `files` is a sorted list of the paths to the input csvs. **It is critical that you have followed the directory setup instructions in the [data acquisition tutorial](data_acquisition.md).** If this has been done incorrectly, you files will not be ordered properly and the F.A.M. results will be erroneous. In this example everything is already setup properly so you don't need to worry.
+> `files` is a sorted list of the paths to the input csvs. **It is critical that you have followed the directory setup instructions in the [data acquisition tutorial](data_acquisition.md).** If this has been done incorrectly, your files will not be ordered properly and the F.A.M. results will be erroneous. In this example everything is already setup properly.
 >
 ```python
 try:
@@ -68,7 +68,7 @@ except:
     export(yr_2018, "cache/yr_2018")
     export(yr_2019, "cache/yr_2019")
 ```
-> We are going to run into a rather dense <i>try-catch</i> block here. F.A.M. uses historical data as part of the classification procedure (more on this later). When running for the current year you don't need to rerun for the past years. To save time and computing resources, we will cache our previously processed data. **Note: you will need to delete any year from the cache if you update the input data for that year.**
+> We are going to run into a rather dense <i>try-catch</i> block here. F.A.M. uses historical data as part of the classification procedure (more on this later). The idea here is that when running for the current year you don't need to rerun for the past years. To save time and computing resources, we will cache our previously processed data. **Note: you will need to delete any year from the cache if you update the input data for that year.**
 >
 We are making calls to our <i>process</i> function here. Let's take a look to see what it does.
 >
@@ -100,7 +100,7 @@ def process(files, year):
 
     return df
 ```
-> This function Uses a series operations to merge multiple .csv files together to uniformly format ndvi time series data across the state. Additionally, function linearly interpolates and constrains observations to 8 day intervals. Let's move on.
+> This function applies a series of operations to merge multiple .csv files together to uniformly format NDVI time series data across the state. Additionally, function linearly interpolates and constrains observations to 8 day intervals. Let's move on.
 >
 ```python
 # historic years
