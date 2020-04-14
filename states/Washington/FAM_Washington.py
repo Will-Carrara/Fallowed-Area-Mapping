@@ -186,7 +186,7 @@ crop_type = pd.read_csv("input/crop_data/perennial.csv").set_index('id')
 def fallowMapping(df, season):
     """Performs initial classification results by season.
 
-    Applies a series rules to periods of the data partitioned by season. Rules
+    Applies a series of rules to periods of the data partitioned by season. Rules
     perform vectorized operations and are detailed in the comments. Assigned
     field statuses are hierarchical in nature and must be later converted to
     their respective cdl codes.

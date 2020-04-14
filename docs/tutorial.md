@@ -115,7 +115,7 @@ max_smooth_5yr = pd.DataFrame({'id': yr_2018.index.values, 'spring_ndvi_smoothed
  max_smooth_spring,'overlap_ndvi_smoothed_5yr_max': max_smooth_overlap,
  'summer_ndvi_smoothed_5yr_max': max_smooth_summer}).set_index('id')
 ```
-> As mentioned above, F.A.M. uses historical data as part of the classification procedure. Here we have defined 2008, 2009, 2010, 2013, and 2017 as our reference years. Internal testing showed five years is sufficient for accurate results, however you may add more if desired. This block is calculating a maximum ndvi time series for these year to use as a retrospective reference.
+> As mentioned above, F.A.M. uses historical data as part of the classification procedure. Here we have defined 2008, 2009, 2010, 2013, and 2017 as our reference years. Internal testing showed five years is sufficient for accurate results, however you may add more if desired. This block is calculating a time series of maximum NDVI for these years to use as a retrospective reference.
 >
 ```python
 # variables to tune
@@ -128,7 +128,7 @@ perennial_date_threshold = 23
 # crop type information for perennials (id's may change with alteration of field boundaries)
 crop_type = pd.read_csv("input/crop_data/perennial.csv").set_index('id')
 ```
-> Our testing showed that the above thresholds yield the highest accuracy, however these may not hold over time. The curators of F.A.M. will work to keep them updated. The `crop_type` variable stores information about which crop ids have known perennials. You can provided your own list if desired and the format is provided in this repository. Now lets look at the main algorithmic calls.
+> Our testing showed that the above thresholds yield the highest accuracy, however these may not hold over time. The curators of F.A.M. will work to keep them updated. The `crop_type` variable stores information about which crop id's have known perennials. You may provide your own list if desired with the format is provided in this repository. Now lets look at the main algorithmic calls.
 >
 ```python
 years = [yr_2019, yr_2018, yr_2017, yr_2016, yr_2015, yr_2013, yr_2010]
@@ -201,7 +201,7 @@ def fallowMapping(df, season):
     return df
 
 ```
-> This function applies a series rules to periods of the data partitioned by season. Rules perform vectorized operations and are detailed in the comments. Assigned field statuses are hierarchical in nature and will be later converted to their respective cdl codes.
+> This function applies a series of rules to periods of the data partitioned by season. Rules perform vectorized operations and are detailed in the comments. Assigned field statuses are hierarchical and will later be converted to their respective cdl codes.
 >
 ```python
 def postProcess(yr_df):
@@ -238,6 +238,6 @@ def postProcess(yr_df):
 
     return [df_spring, df_summer]
 ```
-> Our post-processing procedure compares the date of the max ndvi value with cropped observations in the overlap period to reclassify observations as cropped. We then call a decoding function on encoded statuses to proper cdl standards.
+> Our post-processing procedure compares the date of the maximum NDVI value with cropped observations in the overlap period to reclassify any missed observations as cropped. We then call a decoding function on encoded statuses to proper cdl standards.
 >
 > Now that these functions have been called, the `export()` function will output the results in the <i>outputs</i> folder.
