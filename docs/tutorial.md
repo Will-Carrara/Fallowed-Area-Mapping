@@ -11,11 +11,11 @@ help(name_of_function)
 >
 > ## Understanding the Algorithm
 > Script modification will need to be made based on your specific inputs. The current format of the algorithm varies slightly state by state, however the fundamental structure is very similar. On a high level of abstraction the F.A.M. algorithm preforms these tasks in order:
-> - Read and pre-process input data.
-> - Calculate NDVI maximums over a 5 year user-defined historical period.
-> - Make initial classification on data partitioned by season.
+> - Read and pre-process input data
+> - Calculate NDVI maximums over a 5 year user-defined historical period
+> - Make initial classification on data partitioned by season
 > - Reclassify observations in post-processing
-> - Export results.
+> - Export results
 >
 > This script is written in a functional programming style, where the main calls take place in the last few lines of code. To help you understand the logic will start at the beginning and work our way down.
 >
@@ -33,7 +33,7 @@ pop = 1 # partially irrigated poor    -> 9
 ```python
 files = np.sort([x for x in glob.glob('input/*/*.csv')])
 ```
-> <i>files</i> is sorted list of the paths to the input csvs. **It is critical that you have followed the directory setup instructions in the [data acquisition tutorial](data_acquisition.md).** If this has been done incorrectly, you files will not be ordered properly and the F.A.M. results will be erroneous. In this example everything is already setup properly so you don't need to worry.
+> <i>files</i> is a sorted list of the paths to the input csvs. **It is critical that you have followed the directory setup instructions in the [data acquisition tutorial](data_acquisition.md).** If this has been done incorrectly, you files will not be ordered properly and the F.A.M. results will be erroneous. In this example everything is already setup properly so you don't need to worry.
 >
 ```python
 try:
@@ -71,6 +71,38 @@ except:
 ```
 > We are going to run into a rather dense <i>try-catch</i> block here. F.A.M. uses historical data as part of the classification procedure (more on this later). When running for the current year you don't need to rerun for the past years. To save time and computing resources, we will cache our previously processed data. **Note: you will need to delete any year from the cache if you update the input data for that year.**
 >
+We are making calls to our <i>process</i> function here. Let's take a look to see what it does.
+>
+```python
+def process(files, year):
+    df = pd.concat([pd.read_csv(x, usecols=[1,2,3], parse_dates=[2], header=0,
+        names=['ndvi', 'id', 'date']) for x in files])
+
+    # create any missing observations on 8 day interval for each id
+    dates = pd.date_range("1-01-"+str(year), freq='8D', periods=46)
+    dates = pd.Series(dates.format()).tolist()
+    df = df.append(pd.DataFrame({'ndvi':np.nan,'id':1,'date':dates}), ignore_index=True)
+
+    # merge, sort, and keep max duplicate
+    df = df.sort_values(['id','date','ndvi'])
+    df = df.drop_duplicates(subset=['id','date'], keep='last').iloc[1:]
+
+    # pivot shape for increased efficiency
+    df = df.pivot(index='id', columns='date', values='ndvi')
+
+    # linearly interpolate by id
+    df.interpolate(method='linear', axis=1, limit_direction='both', inplace=True)
+
+    # constrain data to 8 day intervals
+    df = df[dates].dropna()
+
+    print("Processed:", df.shape)
+    print("\n")
+
+    return df
+```
+> This function Uses a series operations to merge multiple .csv files together to uniformly format ndvi time series data across the state. Additionally, function linearly interpolates and constrains observations to 8 day intervals. Let's move on.
+>
 ```python
 # historic years
 years = [yr_2008, yr_2009, yr_2010, yr_2013, yr_2017]
@@ -84,20 +116,21 @@ max_smooth_5yr = pd.DataFrame({'id': yr_2018.index.values, 'spring_ndvi_smoothed
  max_smooth_spring,'overlap_ndvi_smoothed_5yr_max': max_smooth_overlap,
  'summer_ndvi_smoothed_5yr_max': max_smooth_summer}).set_index('id')
 ```
-> As mentioned above, F.A.M. uses historical data as part of the classification procedure. Here we have defined 2008, 2009, 2010, 2013, and 2017 as our reference years. Internal testing showed five years is sufficient for accurate results, however you may add more if desired.
+> As mentioned above, F.A.M. uses historical data as part of the classification procedure. Here we have defined 2008, 2009, 2010, 2013, and 2017 as our reference years. Internal testing showed five years is sufficient for accurate results, however you may add more if desired. This block is calculating a maximum ndvi time series for these year to use as a retrospective reference.
+>
+```python
+# variables to tune
+ndvi_max_threshold = 0.55
+ndvi_min_threshold = 0.4
+ndvi_perc_historic_threshold1 = 0.7
+ndvi_perc_historic_threshold2 = 0.5
+perennial_date_threshold = 23
 
-
-
-
-
-
-
-
-
-
-
-
-
+# crop type information for perennials (id's may change with alteration of field boundaries)
+crop_type = pd.read_csv("input/crop_data/perennial.csv").set_index('id')
+```
+> Our testing showed that the above thresholds yield the highest accuracy, however these may not hold over time. The curators of F.A.M. will work to keep them updated. The <i>crop_type</i> variable stores information about which crop ids have known perennials. You can provided your own list if desired and the format is provided in this repository.
+>
 ```python
 years = [yr_2019, yr_2018, yr_2017, yr_2016, yr_2015, yr_2013, yr_2010]
 for year in years:
@@ -111,4 +144,4 @@ print("Post-processing & exports completed at",snapshot(start),"minutes.\n")
 end = time.time()
 print("Total time to run script:", str(round((end-start)/60,3)), "minutes.\n")
 ```
-> The F.A.M. algorithm uses a lot of list comprehension. If you are not familiar with this, you can find more information [here](https://www.geeksforgeeks.org/comprehensions-in-python/).
+> Here are the main algorithmic calls.

@@ -85,8 +85,6 @@ def process(files, year):
     df = pd.concat([pd.read_csv(x, usecols=[1,2,3], parse_dates=[2], header=0,
         names=['ndvi', 'id', 'date']) for x in files])
 
-    print(year, df.shape)
-
     # create any missing observations on 8 day interval for each id
     dates = pd.date_range("1-01-"+str(year), freq='8D', periods=46)
     dates = pd.Series(dates.format()).tolist()

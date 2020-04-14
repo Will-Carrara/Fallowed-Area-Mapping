@@ -72,7 +72,7 @@ def process(files, year):
 
     Uses a series operations to merge multiple .csv files together to format ndvi
     time series data across the state of Washington. Additionally, function linearly
-    interpolates, and constrains observations to 8 day intervals.
+    interpolates and constrains observations to 8 day intervals.
 
     Args:
         files (list): A list of .csv files.
@@ -84,9 +84,6 @@ def process(files, year):
     """
     df = pd.concat([pd.read_csv(x, usecols=[1,2,3], parse_dates=[2], header=0,
         names=['ndvi', 'id', 'date']) for x in files])
-
-    print(year)
-    print("Raw:", df.shape)
 
     # create any missing observations on 8 day interval for each id
     dates = pd.date_range("1-01-"+str(year), freq='8D', periods=46)
