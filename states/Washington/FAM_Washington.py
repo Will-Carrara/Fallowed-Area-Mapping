@@ -8,7 +8,7 @@
 #
 # author          : Will Carrara
 # date            : 11-14-2019
-# version         : 0.8
+# version         : 0.9
 # notes           : Further project details can be found at: https://github.com/Will-Carrara/Fallowed-Area-Mapping
 # python_version  : 3.*
 # _________________________________________________________________________________________________________________
@@ -303,15 +303,6 @@ def postProcess(yr_df):
     # max ndvi observation and cropped in overlap period
     df_spring['field_status'] = decode(np.where(mask_sp == mask_ov, crp, df_spring['field_status']))
     df_summer['field_status'] = decode(np.where(mask_su == mask_ov, crp, df_summer['field_status']))
-
-    '''
-    # Error logging
-    perns_cg = np.where(crop_type['crop_group'].notnull(), crop_type['crop_group'], np.nan)
-    perns_ct = np.where(crop_type['crop_type'].notnull(), crop_type['crop_type'], np.nan)
-    mask_sp2 = [i if i in b else np.nan for i in a]
-    test = pd.DataFrame({'id':yr_2018.index.values,'date_of_max_ndvi':mask_sp2,'crop_group':perns_cg,'crop_type':perns_ct,'spring_field_status':df_spring['field_status'],'summer_field_status':df_summer['field_status']}).set_index('id')
-    export(pd.concat([test, smooth(yr_df.iloc[:,0:])], axis=1).reindex(test.index).dropna(), 'error_test')
-    '''
 
     # mask for early season perennials (spring only)
     df_spring['field_status'] = np.where(crop_type['crop_group'].notnull(), 15, df_spring['field_status'])
