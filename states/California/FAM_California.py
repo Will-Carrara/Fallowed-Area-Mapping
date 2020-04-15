@@ -143,6 +143,18 @@ except:
 test = [yr_2008, yr_2009, yr_2010, yr_2013, yr_2015, yr_2016, yr_2017, yr_2018, yr_2019]
 
 def reduce (df):
+    """Separates non-common observations.
+
+    Uses a series operations to limit the id values between dataframe to only
+    the commonly shared elements.
+
+    Args:
+        df (DataFrame): A pandas object which contains formatted ndvi time
+                        series data.
+
+    Returns:
+        DataFrame: A pandas object with common elements.
+    """
     common = df.index.intersection(yr_2008.index)
     df = df.loc[common]
 
