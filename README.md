@@ -18,4 +18,4 @@
 > Please note that this code is written for the data as it is currently extracted. The curators of F.A.M. will attempt to keep the package functional, however changes in the data and data availability may impact the functionality of this algorithm.
 >
 > ## Results Preview
-> Information pending.
+> <img src="docs/imgs/sample_results.png" width="600"/>

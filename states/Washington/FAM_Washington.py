@@ -67,6 +67,7 @@ def decode(field_status):
 
     return field_status
 
+
 def process(files, year):
     """Reads, formats, and restructures data.
 

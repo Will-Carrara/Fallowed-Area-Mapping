@@ -32,6 +32,7 @@ prn = 3 # perennial, no crop yet      -> 15
 pin = 2 # partially irrigated normal  -> 8
 pop = 1 # partially irrigated poor    -> 9
 
+# input data paths
 files = np.sort([x for x in glob.glob('input/*/*.csv')])
 
 # export .csv file
@@ -139,8 +140,6 @@ except:
     export(yr_2017, "cache/yr_2017")
     export(yr_2018, "cache/yr_2018")
     export(yr_2019, "cache/yr_2019")
-
-test = [yr_2008, yr_2009, yr_2010, yr_2013, yr_2015, yr_2016, yr_2017, yr_2018, yr_2019]
 
 def reduce (df):
     """Separates non-common observations.
