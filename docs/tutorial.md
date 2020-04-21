@@ -74,6 +74,7 @@ We are making calls to our <i>process</i> function here. Let's take a look to se
 >
 ```python
 def process(files, year):
+
     df = pd.concat([pd.read_csv(x, usecols=[1,2,3], parse_dates=[2], header=0,
         names=['ndvi', 'id', 'date']) for x in files])
 
