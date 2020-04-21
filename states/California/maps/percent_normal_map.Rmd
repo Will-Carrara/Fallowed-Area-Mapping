@@ -1,0 +1,148 @@
+---
+title: "Percent of Normal Maps"
+author: "Will Carrara"
+date: "4/21/2020"
+output: 
+  bookdown::html_document2
+---
+
+<style>
+.main-container {max-width: 1200px !important;}
+  body {text-align: justify}
+</style>
+
+<script>
+   $(document).ready(function() {
+     $head = $('#header');
+     $head.prepend('<img src=\"https://www.nasa.gov/sites/default/files/thumbnails/image/nasa-logo-web-rgb.png\" style=\"float: right;width: 200px;\"/>')});
+</script>
+
+***
+
+### Abstract{-}
+
+This tool is used to generate maps which explore the phenology of individual crops over a predefined 5 year period for the state of California. The historical “non-drought" years used as reference are 2008, 2009, 2010, 2013, 2017. Each colored pixel represents the average NDVI value for a crop partitioned by season as a percent of the same period for the reference years.
+
+```{r include=FALSE}
+knitr::opts_chunk$set(comment=NA, echo=FALSE, fig.align="center", warning=FALSE)
+
+library(ggplot2)
+theme_set(theme_bw())
+
+library(maps)
+library(gridExtra)
+```
+
+
+```{r}
+# data from the FAM outputs
+ca_spring_2016 = read.csv("../output/California_Spring_2016.csv")
+ca_summer_2016 = read.csv("../output/California_Summer_2016.csv")
+
+ca_spring_2017 = read.csv("../output/California_Spring_2017.csv")
+ca_summer_2017 = read.csv("../output/California_Summer_2017.csv")
+
+ca_spring_2018 = read.csv("../output/California_Spring_2018.csv")
+ca_summer_2018 = read.csv("../output/California_Summer_2018.csv")
+
+ca_spring_2019 = read.csv("../output/California_Spring_2019.csv")
+ca_summer_2019 = read.csv("../output/California_Summer_2019.csv")
+
+# lat-lon for each id 
+ca_gps = read.csv("spacial/ca_gps.csv")
+```
+
+
+```{r}
+process = function(fam_output) {
+  # add lat lon 
+  fam_output$lat = ca_gps$lat
+  fam_output$lon = ca_gps$lon
+  
+  # take only postive values
+  fam_output = fam_output[fam_output$percent_5yr_Avg >= 0 & fam_output$percent_5yr_Avg <= 350,] 
+  
+  # create bins
+  fam_output$bin  <- cut(fam_output$percent_5yr_Avg, breaks=c(0,20,40,60,80,100,120), labels=c("20","40","60","80","100","120"))
+  fam_output$bin = as.numeric(as.character(fam_output$bin))
+  
+  # add dummy group column for plotting
+  fam_output$group = 7 
+  
+  return(fam_output)
+}
+
+# create new dataframe 
+ca_spring_2016 = process(ca_spring_2016)
+ca_summer_2016 = process(ca_summer_2016)
+
+ca_spring_2017 = process(ca_spring_2017)
+ca_summer_2017 = process(ca_summer_2017)
+
+ca_spring_2018 = process(ca_spring_2018)
+ca_summer_2018 = process(ca_summer_2018)
+
+ca_spring_2019 = process(ca_spring_2019)
+ca_summer_2019 = process(ca_summer_2019)
+```
+
+
+```{r}
+# uses map package to get state information# usa
+states <- map_data("state")
+
+# california
+ca_df <- states[states$region== "california",]
+counties <- map_data("county")
+ca_county <- counties[counties$region== "california",]
+```
+
+
+```{r}
+# theme options
+ditch_the_axes <- theme(
+  axis.text = element_blank(),
+  axis.line = element_blank(),
+  axis.ticks = element_blank(),
+  panel.border = element_blank(),
+  panel.grid = element_blank(),
+  axis.title = element_blank(),
+  plot.title = element_text(face="bold", hjust=0.18, vjust=-3, size=18),
+  legend.position=c(.58, 0.81)
+)
+
+# plotting function
+plotter= function(fam_output_spring, fam_output_summer, state_df, county_df, year) {
+  # spring season
+  ca_spring <- ggplot(data=state_df, aes(x=long, y=lat, group=group)) + coord_fixed(1.33) + ggtitle(paste("Spring", year)) +
+  geom_polygon(color="black", fill="gray") + geom_polygon(data=county_df, fill=NA, color="white") +
+  geom_point(data=fam_output_spring, aes(x=lon, y=lat, colour=bin), shape = ".", show.legend=TRUE) +
+  geom_polygon(color="black", fill=NA) + ditch_the_axes + 
+  scale_color_gradient2(low="orange4", high="forestgreen", midpoint=75, mid="khaki", name="% normal")
+  
+  # summer season
+  ca_summer <- ggplot(data=state_df, aes(x=long, y=lat, group=group)) + coord_fixed(1.33) + ggtitle(paste("Summer", year)) +
+  geom_polygon(color="black", fill="gray") + geom_polygon(data=county_df, fill=NA, color="white") +
+  geom_point(data=fam_output_summer, aes(x=lon, y=lat, colour=bin), shape = ".", show.legend=TRUE) +
+  geom_polygon(color="black", fill=NA) + ditch_the_axes + 
+  scale_color_gradient2(low="orange4", high="forestgreen", midpoint=75, mid="khaki", name="% normal")
+  
+  # side by side plot
+  grid.arrange(ca_spring, ca_summer, ncol=2)
+}
+```
+
+
+```{r fig.width=18, fig.asp=.5}
+# 2016
+plotter(ca_spring_2016, ca_summer_2016, ca_df, ca_county, "2016")
+
+# 2017
+plotter(ca_spring_2017, ca_summer_2017, ca_df, ca_county, "2017")
+
+# 2018
+plotter(ca_spring_2018, ca_summer_2018, ca_df, ca_county, "2018")
+
+# 2019
+plotter(ca_spring_2019, ca_summer_2019, ca_df, ca_county, "2019")
+```
