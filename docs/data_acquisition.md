@@ -1,8 +1,8 @@
-#
+# Data Acquisition
 >
 >
 > ## Introduction
-> This [document](https://docs.google.com/document/d/1TTolXOjy3UQUG_UKBN5ror2HNB1JjmtVScBrJW-CjHo/edit#heading=h.jpm77k4o3md1) will guide you through the process of extracting the average NDVI of a given set of polygons of farm field boundaries. You will be using the Google Earth Engine's Python API to do the extraction. The goal here is to obtain properly formatted NDVI timeseries data in multiple .csv files for the input.
+> This [document](https://docs.google.com/document/d/1TTolXOjy3UQUG_UKBN5ror2HNB1JjmtVScBrJW-CjHo/edit?usp=sharing) will guide you through the process of extracting the average NDVI of a given set of polygons of farm field boundaries. You will be using the Google Earth Engine's Python API to do the extraction. The goal here is to obtain properly formatted NDVI timeseries data in multiple .csv files for the input.
 >
 > **You only need to obtain the raw .csv outputs after completing step 5 above.** F.A.M. contains routines to format and merge the extracted files in accordance to the algorithm's requirements. Once the extractions are completed there will be a series of files which look something like this:
 >
