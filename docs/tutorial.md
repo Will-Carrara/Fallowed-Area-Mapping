@@ -86,9 +86,6 @@ def process(files, year):
     # constrain data to 8 day intervals
     df = df[dates].dropna()
 
-    print("Processed:", df.shape)
-    print("\n")
-
     return df
 ```
 > This function applies a series of operations to merge multiple .csv files together to uniformly format NDVI time series data across the state. Additionally, function linearly interpolates and constrains observations to 8 day intervals. Let's move on.
