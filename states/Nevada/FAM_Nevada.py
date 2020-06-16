@@ -122,11 +122,14 @@ print("Processing completed at",snapshot(start),"minutes.\n")
 
 print("Historic calculations initiated at",snapshot(start),"minutes.\n")
 
+# all years
+years = [yr_2006, yr_2008, yr_2009, yr_2010, yr_2011, yr_2013, yr_2015, yr_2014, yr_2016, yr_2017, yr_2018, yr_2019]
+
 # historic years
-years = [yr_2006, yr_2008, yr_2009, yr_2010, yr_2017]
+hist_years = [yr_2006, yr_2008, yr_2009, yr_2010, yr_2017]
 
 # calculate 5 year maximums for smoothed ts
-max_smooth = np.array([smooth(df).max(axis=1) for df in years]).max(0)
+max_smooth = np.array([smooth(df).max(axis=1) for df in hist_years]).max(0)
 max_smooth_5yr = pd.DataFrame({'id':yr_2018.index.values,'ndvi_smooth_5yr_max':max_smooth})
 
 print("Historic calculations completed at",snapshot(start),"minutes.\n")
@@ -207,7 +210,6 @@ def fallowMapping(df):
 
 print("Classifications initiated at",snapshot(start),"minutes.\n")
 
-years = [yr_2006, yr_2008, yr_2009, yr_2010, yr_2015, yr_2016, yr_2017, yr_2018, yr_2019]
 for year in years:
     name = [x for x in globals() if globals()[x] is year][0]
     export(fallowMapping(year),'output/Nevada_'+name[3:7])

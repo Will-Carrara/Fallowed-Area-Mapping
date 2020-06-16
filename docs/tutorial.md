@@ -95,12 +95,12 @@ def process(files, year):
 >
 ```python
 # historic years
-years = [yr_2008, yr_2009, yr_2010, yr_2013, yr_2017]
+hist_years = [yr_2008, yr_2009, yr_2010, yr_2013, yr_2017]
 
 # calculate 5 year maximums for smoothed ts
-max_smooth_spring = np.array([smooth(df.iloc[:,8:19]).max(axis=1) for df in years]).max(0)
-max_smooth_overlap = np.array([smooth(df.iloc[:,12:23]).max(axis=1) for df in years]).max(0)
-max_smooth_summer = np.array([smooth(df.iloc[:,19:38]).max(axis=1) for df in years]).max(0)
+max_smooth_spring = np.array([smooth(df.iloc[:,8:19]).max(axis=1) for df in hist_years]).max(0)
+max_smooth_overlap = np.array([smooth(df.iloc[:,12:23]).max(axis=1) for df in hist_years]).max(0)
+max_smooth_summer = np.array([smooth(df.iloc[:,19:38]).max(axis=1) for df in hist_years]).max(0)
 
 max_smooth_5yr = pd.DataFrame({'id': yr_2018.index.values, 'spring_ndvi_smoothed_5yr_max':
  max_smooth_spring,'overlap_ndvi_smoothed_5yr_max': max_smooth_overlap,
