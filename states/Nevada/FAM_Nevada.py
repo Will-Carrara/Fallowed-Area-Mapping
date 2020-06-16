@@ -7,8 +7,8 @@
 #                   of Nevada on a monthly basis.
 #
 # author          : Will Carrara
-# date            : 11-14-2019
-# version         : 0.7
+# date            : 06-16-2020
+# version         : 1.2
 # notes           : Further project details can be found at: https://github.com/Will-Carrara/Fallowed-Area-Mapping
 # python_version  : 3.*
 # _________________________________________________________________________________________________________________
@@ -31,7 +31,8 @@ flw = 3 # fallow                      -> 10
 pin = 2 # partially irrigated normal  -> 8
 pop = 1 # partially irrigated poor    -> 9
 
-files = np.sort([x for x in glob.glob('input/*/*.csv')])
+# input data paths
+files = [x for x in glob.glob('input/*/*.csv')]
 
 # export csv file
 export = lambda df, name: df.to_csv(name + '.csv', header=True)
@@ -104,15 +105,18 @@ def process(files, year):
 
 print("Processing initiated at",snapshot(start),"minutes.\n")
 
-yr_2006 = process(files[0:2], 2006)
-yr_2008 = process(files[2:4], 2008)
-yr_2009 = process(files[4:6], 2009)
-yr_2010 = process(files[6:8], 2010)
-yr_2015 = process(files[8:11], 2015)
-yr_2016 = process(files[11:13], 2016)
-yr_2017 = process(files[13:15], 2017)
-yr_2018 = process(files[15:18], 2018)
-yr_2019 = process(files[18:21], 2019)
+yr_2006 = process(list(filter(lambda x:'2006' in x, files)), 2006)
+yr_2008 = process(list(filter(lambda x:'2008' in x, files)), 2008)
+yr_2009 = process(list(filter(lambda x:'2009' in x, files)), 2009)
+yr_2010 = process(list(filter(lambda x:'2010' in x, files)), 2010)
+yr_2011 = process(list(filter(lambda x:'2011' in x, files)), 2011)
+yr_2013 = process(list(filter(lambda x:'2013' in x, files)), 2013)
+yr_2014 = process(list(filter(lambda x:'2014' in x, files)), 2014)
+yr_2015 = process(list(filter(lambda x:'2015' in x, files)), 2015)
+yr_2016 = process(list(filter(lambda x:'2016' in x, files)), 2016)
+yr_2017 = process(list(filter(lambda x:'2017' in x, files)), 2017)
+yr_2018 = process(list(filter(lambda x:'2018' in x, files)), 2018)
+yr_2019 = process(list(filter(lambda x:'2019' in x, files)), 2019)
 
 print("Processing completed at",snapshot(start),"minutes.\n")
 
@@ -123,7 +127,7 @@ years = [yr_2006, yr_2008, yr_2009, yr_2010, yr_2017]
 
 # calculate 5 year maximums for smoothed ts
 max_smooth = np.array([smooth(df).max(axis=1) for df in years]).max(0)
-max_smooth_5yr = pd.DataFrame({'id':yr_2018.index.values,'ndvi_smooth_5yr_max':max_smooth}).set_index('id')
+max_smooth_5yr = pd.DataFrame({'id':yr_2018.index.values,'ndvi_smooth_5yr_max':max_smooth})
 
 print("Historic calculations completed at",snapshot(start),"minutes.\n")
 

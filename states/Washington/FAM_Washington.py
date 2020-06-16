@@ -7,8 +7,8 @@
 #                   Valley of California on a monthly basis.
 #
 # author          : Will Carrara
-# date            : 11-14-2019
-# version         : 0.9
+# date            : 06-16-2020
+# version         : 1.2
 # notes           : Further project details can be found at: https://github.com/Will-Carrara/Fallowed-Area-Mapping
 # python_version  : 3.*
 # _________________________________________________________________________________________________________________
@@ -32,7 +32,8 @@ prn = 3 # perennial, no crop yet      -> 15
 pin = 2 # partially irrigated normal  -> 8
 pop = 1 # partially irrigated poor    -> 9
 
-files = np.sort([x for x in glob.glob('input/*/*.csv')])
+# input data paths
+files = [x for x in glob.glob('input/*/*.csv')]
 
 # export csv file
 export = lambda df, name: df.to_csv(name + '.csv', header=True)
@@ -104,9 +105,6 @@ def process(files, year):
     # constrain data to 8 day intervals
     df = df[dates].dropna()
 
-    print("Processed:", df.shape)
-    print("\n")
-
     return df
 
 print("Processing initiated at",snapshot(start),"minutes.\n")
@@ -124,15 +122,15 @@ try:
 
 except:
     print("Exception: year not found.")
-    yr_2008 = process(files[0:24], 2008)
-    yr_2009 = process(files[24:48], 2009)
-    yr_2010 = process(files[48:72], 2010)
-    yr_2013 = process(files[72:96], 2013)
-    yr_2015 = process(files[96:120], 2015)
-    yr_2016 = process(files[120:144], 2016)
-    yr_2017 = process(files[144:168], 2017)
-    yr_2018 = process(files[168:192], 2018)
-    yr_2019 = process(files[192:216], 2019)
+    yr_2008 = process(list(filter(lambda x:'2008' in x, files)), 2008)
+    yr_2009 = process(list(filter(lambda x:'2009' in x, files)), 2009)
+    yr_2010 = process(list(filter(lambda x:'2010' in x, files)), 2010)
+    yr_2013 = process(list(filter(lambda x:'2013' in x, files)), 2013)
+    yr_2015 = process(list(filter(lambda x:'2015' in x, files)), 2015)
+    yr_2016 = process(list(filter(lambda x:'2016' in x, files)), 2016)
+    yr_2017 = process(list(filter(lambda x:'2017' in x, files)), 2017)
+    yr_2018 = process(list(filter(lambda x:'2018' in x, files)), 2018)
+    yr_2019 = process(list(filter(lambda x:'2019' in x, files)), 2019)
 
     export(yr_2008, "cache/yr_2008")
     export(yr_2009, "cache/yr_2009")
