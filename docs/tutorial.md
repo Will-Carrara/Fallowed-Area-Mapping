@@ -48,25 +48,15 @@ try:
 
 except:
     print("Exception: year not found.")
-    yr_2008 = process(files[0:24], 2008)
-    yr_2009 = process(files[24:48], 2009)
-    yr_2010 = process(files[48:72], 2010)
-    yr_2013 = process(files[72:96], 2013)
-    yr_2015 = process(files[96:120], 2015)
-    yr_2016 = process(files[120:144], 2016)
-    yr_2017 = process(files[144:168], 2017)
-    yr_2018 = process(files[168:192], 2018)
-    yr_2019 = process(files[192:216], 2019)
-
-    export(yr_2008, "cache/yr_2008")
-    export(yr_2009, "cache/yr_2009")
-    export(yr_2010, "cache/yr_2010")
-    export(yr_2013, "cache/yr_2013")
-    export(yr_2015, "cache/yr_2015")
-    export(yr_2016, "cache/yr_2016")
-    export(yr_2017, "cache/yr_2017")
-    export(yr_2018, "cache/yr_2018")
-    export(yr_2019, "cache/yr_2019")
+    yr_2008 = process(list(filter(lambda x:'2008' in x, files)), 2008)
+    yr_2009 = process(list(filter(lambda x:'2009' in x, files)), 2009)
+    yr_2010 = process(list(filter(lambda x:'2010' in x, files)), 2010)
+    yr_2013 = process(list(filter(lambda x:'2013' in x, files)), 2013)
+    yr_2015 = process(list(filter(lambda x:'2015' in x, files)), 2015)
+    yr_2016 = process(list(filter(lambda x:'2016' in x, files)), 2016)
+    yr_2017 = process(list(filter(lambda x:'2017' in x, files)), 2017)
+    yr_2018 = process(list(filter(lambda x:'2018' in x, files)), 2018)
+    yr_2019 = process(list(filter(lambda x:'2019' in x, files)), 2019)
 ```
 > We are going to run into a rather dense <i>try-catch</i> block here. F.A.M. uses historical data as part of the classification procedure (more on this later). The idea here is that when running for the current year you don't need to rerun for the past years. To save time and computing resources, we will cache our previously processed data. **Note: you will need to delete any year from the cache if you update the input data for that year.**
 >
