@@ -172,12 +172,16 @@ def reduce (df):
     common = df.index.intersection(yr_2013.index)
     df = df.loc[common]
 
+    df = df.loc[common]
+
     return df.loc[common]
 
 yr_2008 = reduce(yr_2008)
 yr_2009 = reduce(yr_2009)
 yr_2010 = reduce(yr_2010)
+yr_2011 = reduce(yr_2011)
 yr_2013 = reduce(yr_2013)
+yr_2014 = reduce(yr_2014)
 yr_2015 = reduce(yr_2015)
 yr_2016 = reduce(yr_2016)
 yr_2017 = reduce(yr_2017)
