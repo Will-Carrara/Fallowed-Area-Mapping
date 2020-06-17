@@ -113,7 +113,9 @@ try:
     yr_2008 = pd.read_csv("cache/yr_2008.csv").set_index('id')
     yr_2009 = pd.read_csv("cache/yr_2009.csv").set_index('id')
     yr_2010 = pd.read_csv("cache/yr_2010.csv").set_index('id')
+    yr_2011 = pd.read_csv("cache/yr_2010.csv").set_index('id')
     yr_2013 = pd.read_csv("cache/yr_2013.csv").set_index('id')
+    yr_2014 = pd.read_csv("cache/yr_2014.csv").set_index('id')
     yr_2015 = pd.read_csv("cache/yr_2015.csv").set_index('id')
     yr_2016 = pd.read_csv("cache/yr_2016.csv").set_index('id')
     yr_2017 = pd.read_csv("cache/yr_2017.csv").set_index('id')
@@ -125,7 +127,9 @@ except:
     yr_2008 = process(list(filter(lambda x:'2008' in x, files)), 2008)
     yr_2009 = process(list(filter(lambda x:'2009' in x, files)), 2009)
     yr_2010 = process(list(filter(lambda x:'2010' in x, files)), 2010)
+    yr_2011 = process(list(filter(lambda x:'2011' in x, files)), 2011)
     yr_2013 = process(list(filter(lambda x:'2013' in x, files)), 2013)
+    yr_2014 = process(list(filter(lambda x:'2014' in x, files)), 2014)
     yr_2015 = process(list(filter(lambda x:'2015' in x, files)), 2015)
     yr_2016 = process(list(filter(lambda x:'2016' in x, files)), 2016)
     yr_2017 = process(list(filter(lambda x:'2017' in x, files)), 2017)
@@ -135,7 +139,9 @@ except:
     export(yr_2008, "cache/yr_2008")
     export(yr_2009, "cache/yr_2009")
     export(yr_2010, "cache/yr_2010")
+    export(yr_2011, "cache/yr_2011")
     export(yr_2013, "cache/yr_2013")
+    export(yr_2014, "cache/yr_2014")
     export(yr_2015, "cache/yr_2015")
     export(yr_2016, "cache/yr_2016")
     export(yr_2017, "cache/yr_2017")
@@ -308,7 +314,7 @@ def postProcess(yr_df):
 
 print("Post-processing initiated at",snapshot(start),"minutes.\n")
 
-years = [yr_2019, yr_2018, yr_2017, yr_2016, yr_2015, yr_2013, yr_2010]
+years = [yr_2019, yr_2018, yr_2017, yr_2016, yr_2015, yr_2014, yr_2013, yr_2011, yr_2010, yr_2009, yr_2008]
 for year in years:
     name = [x for x in globals() if globals()[x] is year][0]
     export(postProcess(year)[0],'output/Washington_Spring_'+name[3:7])
