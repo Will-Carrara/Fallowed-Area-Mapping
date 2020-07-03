@@ -113,7 +113,7 @@ try:
     yr_2008 = pd.read_csv("cache/yr_2008.csv").set_index('id')
     yr_2009 = pd.read_csv("cache/yr_2009.csv").set_index('id')
     yr_2010 = pd.read_csv("cache/yr_2010.csv").set_index('id')
-    yr_2011 = pd.read_csv("cache/yr_2010.csv").set_index('id')
+    yr_2011 = pd.read_csv("cache/yr_2011.csv").set_index('id')
     yr_2013 = pd.read_csv("cache/yr_2013.csv").set_index('id')
     yr_2014 = pd.read_csv("cache/yr_2014.csv").set_index('id')
     yr_2015 = pd.read_csv("cache/yr_2015.csv").set_index('id')
