@@ -169,6 +169,9 @@ def reduce (df):
     common = df.index.intersection(yr_2009.index)
     df = df.loc[common]
 
+    common = df.index.intersection(yr_2011.index)
+    df = df.loc[common]
+
     common = df.index.intersection(yr_2013.index)
     df = df.loc[common]
 
@@ -357,10 +360,12 @@ def postProcess(yr_df):
 print("Post-processing initiated at",snapshot(start),"minutes.\n")
 
 years = [yr_2019, yr_2018, yr_2017, yr_2016, yr_2015, yr_2014, yr_2013, yr_2011, yr_2010, yr_2009, yr_2008]
+
 for year in years:
+    fam = postProcess(year)
     name = [x for x in globals() if globals()[x] is year][0]
-    export(postProcess(year)[0],'output/California_Spring_'+name[3:7])
-    export(postProcess(year)[1],'output/California_Summer_'+name[3:7])
+    export(fam[0],'output/California_Spring_'+name[3:7])
+    export(fam[1],'output/California_Summer_'+name[3:7])
 
 print("Post-processing & exports completed at",snapshot(start),"minutes.\n")
 
