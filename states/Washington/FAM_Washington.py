@@ -7,8 +7,8 @@
 #                   Valley of California on a monthly basis.
 #
 # author          : Will Carrara
-# date            : 06-16-2020
-# version         : 1.2
+# date            : 07-02-2020
+# version         : 1.6
 # notes           : Further project details can be found at: https://github.com/Will-Carrara/Fallowed-Area-Mapping
 # python_version  : 3.*
 # _________________________________________________________________________________________________________________

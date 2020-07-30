@@ -7,8 +7,8 @@
 #                   Valley of California on a monthly basis.
 #
 # author          : Will Carrara
-# date            : 06-16-2020
-# version         : 1.2
+# date            : 07-29-2020
+# version         : 1.7
 # notes           : Further project details can be found at: https://github.com/Will-Carrara/Fallowed-Area-Mapping
 # python_version  : 3.*
 # _________________________________________________________________________________________________________________
@@ -146,6 +146,7 @@ except:
     export(yr_2017, "cache/yr_2017")
     export(yr_2018, "cache/yr_2018")
     export(yr_2019, "cache/yr_2019")
+
 
 def reduce (df):
     """Separates non-common observations.
@@ -360,7 +361,6 @@ def postProcess(yr_df):
 print("Post-processing initiated at",snapshot(start),"minutes.\n")
 
 years = [yr_2019, yr_2018, yr_2017, yr_2016, yr_2015, yr_2014, yr_2013, yr_2011, yr_2010, yr_2009, yr_2008]
-
 for year in years:
     fam = postProcess(year)
     name = [x for x in globals() if globals()[x] is year][0]
