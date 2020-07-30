@@ -1,0 +1,267 @@
+---
+title: "Percent of Normal Maps"
+author: "Will Carrara"
+date: "4/21/2020"
+output: 
+  bookdown::html_document2
+---
+
+<style>
+.main-container {max-width: 1200px !important;}
+  body {text-align: justify}
+</style>
+
+<script>
+   $(document).ready(function() {
+     $head = $('#header');
+     $head.prepend('<img src=\"https://www.nasa.gov/sites/default/files/thumbnails/image/nasa-logo-web-rgb.png\" style=\"float: right;width: 200px;\"/>')});
+</script>
+
+***
+
+### Abstract{-}
+
+This tool is used to generate maps which explore the phenology of individual crops over a predefined 5 year period for the the Western United States. The historical “non-drought" years used as reference are 2008, 2009, 2010, 2013, 2017. Each colored pixel represents the average NDVI value for a crop partitioned by season as a percent of the same period for the combined reference years.
+
+```{r, include=FALSE}
+# global settings 
+knitr::opts_chunk$set(comment=NA, echo=FALSE, fig.align="center", warning=FALSE)
+
+# required libraries 
+library(maps)
+library(rgdal)
+library(ggplot2)
+library(gridExtra)
+
+# plot theme settings
+theme_set(theme_bw())
+
+# color palette
+low = "orange4"
+mid = "khaki"
+high = "forestgreen"
+```
+
+```{r}
+# theme options
+remove_axes <- theme(
+  axis.text = element_blank(),
+  axis.line = element_blank(),
+  axis.ticks = element_blank(),
+  panel.border = element_blank(),
+  panel.grid = element_blank(),
+  axis.title = element_blank()
+)
+```
+
+```{r, fig.width=18, fig.asp=.5}
+# plotting function California
+plotter_ca = function(fam_spring, fam_summer, year, shp) {
+    # spring season
+    spring <- ggplot(data=shp, aes(x=long, y=lat, group=group)) + coord_fixed(1.33) + ggtitle(paste("Spring", year)) +
+    geom_polygon(color="gray25", fill=alpha("#2E4053",.65)) + remove_axes + 
+    geom_point(data=fam_spring, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
+    scale_colour_manual(values=c(low, mid, high), na.translate=F) + 
+    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal")) +
+    theme(plot.title=element_text(face="bold", hjust=0.18, vjust=-3, size=18), legend.position=c(.58, 0.81))
+    
+    #ggsave(paste0("Spring_", year, ".png"), dpi=1200)
+    
+    # summer season
+    summer <- ggplot(data=shp, aes(x=long, y=lat, group=group)) + coord_fixed(1.33) + ggtitle(paste("Summer", year)) +
+    geom_polygon(color="gray25", fill=alpha("#2E4053",.65)) + remove_axes + 
+    geom_point(data=fam_summer, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
+    scale_colour_manual(values=c(low, mid, high), na.translate=F) + 
+    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal")) +
+    theme(plot.title=element_text(face="bold", hjust=0.18, vjust=-3, size=18), legend.position=c(.58, 0.81))
+    
+    #ggsave(paste0("Summer_", year, ".png"), dpi=1200)
+  
+    # side by side plot
+    grid.arrange(spring, summer, ncol=2)
+}
+
+# plotting function Washington
+plotter_wa = function(fam_spring, fam_summer, year, shp) {
+    # spring season
+    spring <- ggplot(data=shp, aes(x=long, y=lat, group=group)) + coord_fixed(1.33) + ggtitle(paste("Spring", year)) +
+    geom_polygon(color="gray25", fill=alpha("#2E4053",.65)) + remove_axes + 
+    geom_point(data=fam_spring, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
+    scale_colour_manual(values=c(low, mid, high), na.translate=F) +
+    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal"))
+    
+    #ggsave(paste0("Spring_", year, ".png"), dpi=1200)
+    
+    # summer season
+    summer <- ggplot(data=shp, aes(x=long, y=lat, group=group)) + coord_fixed(1.33) + ggtitle(paste("Summer", year)) +
+    geom_polygon(color="gray25", fill=alpha("#2E4053",.65)) + remove_axes + 
+    geom_point(data=fam_summer, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
+    scale_colour_manual(values=c(low, mid, high), na.translate=F) +
+    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal"))
+    
+    #ggsave(paste0("Summer_", year, ".png"), dpi=1200)
+  
+    # side by side plot
+    grid.arrange(spring, summer, ncol=2)
+}
+
+# plotting function Nevada
+plotter_nv = function(fam_output, year, shp) {
+    # spring season
+    year <- ggplot(data=shp, aes(x=long, y=lat, group=group)) + coord_fixed(1.33) + ggtitle(paste("Nevada", year)) +
+    geom_polygon(color="gray25", fill=alpha("#2E4053",.65)) + remove_axes + 
+    geom_point(data=fam_output, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
+    scale_colour_manual(values=c(low, mid, high), na.translate=F) +
+    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal"))
+    
+    print(year)
+    #ggsave(paste0("Spring_", year, ".png"), dpi=1200)
+}
+
+```
+
+```{r}
+process = function(path, gps) {
+    # input data 
+    fam_output = read.csv(path)
+    
+    # intersect
+    fam_output = merge(fam_output, gps, by.x="id", by.y="id")
+    
+    # add lat lon 
+    fam_output$lat = gps$lat
+    fam_output$lon = gps$lon
+    
+ 
+    # take only postive values
+    fam_output = fam_output[fam_output$percent_5yr_Avg >= 0 & fam_output$percent_5yr_Avg < 400,] 
+    
+    # add dummy group column for plotting
+    fam_output$group = -1
+    
+    # add breaks
+    fam_output$bin = cut(fam_output$percent_5yr_Avg, breaks = c(0,60,80,max(fam_output$percent_5yr_Avg)), labels=c("0-60", "60-80","80-max"))
+    
+    return(fam_output)
+}
+```
+
+
+```{r, results='hide'}
+state = function(state) {
+    if (state == "California") {
+        # crop spacial reference
+        gps = read.csv("geospacial/ca_gps.csv")
+        
+        # state base map
+        shp = readOGR("geospacial/basemaps/cali/cb_2018_06_sldl_500k.shp", verbose=FALSE)
+        base = spTransform(shp, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"))
+        
+        # FAM output
+        spring_2015 = process("../states/California/output/California_Spring_2015.csv", gps)
+        summer_2015 = process("../states/California/output/California_Summer_2015.csv", gps)
+        
+        spring_2016 = process("../states/California/output/California_Spring_2016.csv", gps)
+        summer_2016 = process("../states/California/output/California_Summer_2016.csv", gps)
+        
+        spring_2017 = process("../states/California/output/California_Spring_2017.csv", gps)
+        summer_2017 = process("../states/California/output/California_Summer_2017.csv", gps)
+        
+        spring_2018 = process("../states/California/output/California_Spring_2018.csv", gps)
+        summer_2018 = process("../states/California/output/California_Summer_2018.csv", gps)
+        
+        spring_2019 = process("../states/California/output/California_Spring_2019.csv", gps)
+        summer_2019 = process("../states/California/output/California_Summer_2019.csv", gps)
+        
+        #2015
+        plotter_ca(spring_2015, summer_2015, "2015", shp)
+        # 2016
+        plotter_ca(spring_2016, summer_2016, "2016", shp)
+        # 2017
+        plotter_ca(spring_2017, summer_2017, "2017", shp)
+        # 2018
+        plotter_ca(spring_2018, summer_2018, "2018", shp)
+        # 2019
+        plotter_ca(spring_2019, summer_2019, "2019", shp)
+    }
+    
+    else if (state == "Nevada") {
+        # crop spacial reference
+        gps = read.csv("geospacial/nv_gps.csv")
+        
+        # state base map
+        shp = readOGR("geospacial/basemaps/nev/cb_2018_32_sldl_500k.shp", verbose=FALSE)
+        base = spTransform(shp, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"))
+        
+        # FAM output
+        nv_2015 = process("../states/Nevada/output/Nevada_2015.csv", gps)
+        nv_2016 = process("../states/Nevada/output/Nevada_2016.csv", gps)
+        nv_2017 = process("../states/Nevada/output/Nevada_2017.csv", gps)
+        nv_2018 = process("../states/Nevada/output/Nevada_2018.csv", gps)
+        nv_2019 = process("../states/Nevada/output/Nevada_2019.csv", gps)
+
+        #2015
+        plotter_nv(nv_2015, "2015", shp)
+        # 2016
+        plotter_nv(nv_2016, "2016", shp)
+        # 2017
+        plotter_nv(nv_2017, "2017", shp)
+        # 2018
+        plotter_nv(nv_2018, "2018", shp)
+        # 2019
+        plotter_nv(nv_2019, "2019", shp)
+    }
+    
+    else if (state == "Washington") {
+        # crop spacial reference
+        gps = read.csv("geospacial/wa_gps.csv")
+        
+        # state base map
+        shp = readOGR("geospacial/basemaps/wash/cb_2018_53_sldl_500k.shp", verbose=FALSE)
+        base = spTransform(shp, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"))
+        
+        # FAM output
+        spring_2015 = process("../states/Washington/output/Washington_Spring_2015.csv", gps)
+        summer_2015 = process("../states/Washington/output/Washington_Summer_2015.csv", gps)
+        
+        spring_2016 = process("../states/Washington/output/Washington_Spring_2016.csv", gps)
+        summer_2016 = process("../states/Washington/output/Washington_Summer_2016.csv", gps)
+        
+        spring_2017 = process("../states/Washington/output/Washington_Spring_2017.csv", gps)
+        summer_2017 = process("../states/Washington/output/Washington_Summer_2017.csv", gps)
+        
+        spring_2018 = process("../states/Washington/output/Washington_Spring_2018.csv", gps)
+        summer_2018 = process("../states/Washington/output/Washington_Summer_2018.csv", gps)
+        
+        spring_2019 = process("../states/Washington/output/Washington_Spring_2019.csv", gps)
+        summer_2019 = process("../states/Washington/output/Washington_Summer_2019.csv", gps)
+        
+        #2015
+        plotter_wa(spring_2015, summer_2015, "2015", shp)
+        # 2016
+        plotter_wa(spring_2016, summer_2016, "2016", shp)
+        # 2017
+        plotter_wa(spring_2017, summer_2017, "2017", shp)
+        # 2018
+        plotter_wa(spring_2018, summer_2018, "2018", shp)
+        # 2019
+        plotter_wa(spring_2019, summer_2019, "2019", shp)
+    }
+}
+```
+
+```{r, fig.width=18, fig.asp=.5}
+state("California")
+#state("Washington")
+#state("Nevada")
+```
+
+
+
+
+
+
+
+
+
+
