@@ -1,4 +1,4 @@
-# Fallowed Area Mapping (UNDER CONSTRUCTION)
+# Fallowed Area Mapping
 >
 >
 > ## Abstract
