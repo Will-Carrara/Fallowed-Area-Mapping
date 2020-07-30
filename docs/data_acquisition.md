@@ -13,6 +13,7 @@
 ```bash
     .
     ├── docs                    # documentation
+    ├── maps                    # map generation tool
     └── states
         ├── California
         │   ├── input
