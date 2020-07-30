@@ -50,7 +50,8 @@ remove_axes <- theme(
   axis.ticks = element_blank(),
   panel.border = element_blank(),
   panel.grid = element_blank(),
-  axis.title = element_blank()
+  axis.title = element_blank(),
+  plot.title = element_text(face="bold", size=18)
 )
 ```
 
@@ -63,7 +64,7 @@ plotter_ca = function(fam_spring, fam_summer, year, shp) {
     geom_point(data=fam_spring, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
     scale_colour_manual(values=c(low, mid, high), na.translate=F) + 
     guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal")) +
-    theme(plot.title=element_text(face="bold", hjust=0.18, vjust=-3, size=18), legend.position=c(.58, 0.81))
+    theme(legend.position=c(.58, 0.81))
     
     #ggsave(paste0("Spring_", year, ".png"), dpi=1200)
     
@@ -73,7 +74,7 @@ plotter_ca = function(fam_spring, fam_summer, year, shp) {
     geom_point(data=fam_summer, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
     scale_colour_manual(values=c(low, mid, high), na.translate=F) + 
     guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal")) +
-    theme(plot.title=element_text(face="bold", hjust=0.18, vjust=-3, size=18), legend.position=c(.58, 0.81))
+    theme(plot.title=element_text(hjust=0.18, vjust=-3, size=18), legend.position=c(.58, 0.81))
     
     #ggsave(paste0("Summer_", year, ".png"), dpi=1200)
   
@@ -88,7 +89,8 @@ plotter_wa = function(fam_spring, fam_summer, year, shp) {
     geom_polygon(color="gray25", fill=alpha("#2E4053",.65)) + remove_axes + 
     geom_point(data=fam_spring, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
     scale_colour_manual(values=c(low, mid, high), na.translate=F) +
-    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal"))
+    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal")) +
+    theme(plot.title=element_text(hjust=0.6, vjust=-2))
     
     #ggsave(paste0("Spring_", year, ".png"), dpi=1200)
     
@@ -97,7 +99,8 @@ plotter_wa = function(fam_spring, fam_summer, year, shp) {
     geom_polygon(color="gray25", fill=alpha("#2E4053",.65)) + remove_axes + 
     geom_point(data=fam_summer, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
     scale_colour_manual(values=c(low, mid, high), na.translate=F) +
-    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal"))
+    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal")) +
+    theme(plot.title=element_text(hjust=0.6, vjust=-2))
     
     #ggsave(paste0("Summer_", year, ".png"), dpi=1200)
   
@@ -112,9 +115,11 @@ plotter_nv = function(fam_output, year, shp) {
     geom_polygon(color="gray25", fill=alpha("#2E4053",.65)) + remove_axes + 
     geom_point(data=fam_output, aes(x=lon, y=lat, colour=bin), shape=".", show.legend=TRUE) +
     scale_colour_manual(values=c(low, mid, high), na.translate=F) +
-    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal"))
+    guides(colour=guide_legend(override.aes=list(shape=15, size=7), title="Percent Normal")) +
+      theme(plot.title=element_text(hjust=0.6, vjust=-3))
     
     print(year)
+    
     #ggsave(paste0("Spring_", year, ".png"), dpi=1200)
 }
 
@@ -132,7 +137,6 @@ process = function(path, gps) {
     fam_output$lat = gps$lat
     fam_output$lon = gps$lon
     
- 
     # take only postive values
     fam_output = fam_output[fam_output$percent_5yr_Avg >= 0 & fam_output$percent_5yr_Avg < 400,] 
     
@@ -147,7 +151,7 @@ process = function(path, gps) {
 ```
 
 
-```{r, results='hide'}
+```{r}
 state = function(state) {
     if (state == "California") {
         # crop spacial reference
@@ -188,7 +192,7 @@ state = function(state) {
     else if (state == "Nevada") {
         # crop spacial reference
         gps = read.csv("geospacial/nv_gps.csv")
-        
+      
         # state base map
         shp = readOGR("geospacial/basemaps/nev/cb_2018_32_sldl_500k.shp", verbose=FALSE)
         base = spTransform(shp, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84"))
@@ -252,8 +256,8 @@ state = function(state) {
 
 ```{r, fig.width=18, fig.asp=.5}
 state("California")
-#state("Washington")
-#state("Nevada")
+state("Washington")
+state("Nevada")
 ```
 
 
