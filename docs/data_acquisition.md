@@ -10,6 +10,7 @@
 >
 > ## Directory Setup
 > You will need to initially set up a directory structure in this format. Much of this will be completed after cloning the repository, however the input folders will need to be configured for your specific application as the years you intend to analyze may vary from others.
+
 ```bash
     .
     ├── docs                    # documentation
@@ -41,6 +42,7 @@
             ├── output
             └── cache
 ```
+
 > In the <i>input</i> directories within each folder labeled according its corresponding year, place the output files of the extractions. You will note that there is a folder named <i>crop_data</i>. This contains a .csv file which lists known perennial sites within the state. This information is provided for both Washington and California, the latter can be found [here](../states/California/sample_crop_data/).
 >
 > Now that everything is in place, we can proceed to [running](tutorial.md) F.A.M.
